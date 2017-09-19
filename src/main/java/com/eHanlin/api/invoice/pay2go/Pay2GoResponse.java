@@ -1,36 +1,70 @@
 package com.eHanlin.api.invoice.pay2go;
 
-import com.eHanlin.api.invoice.util.MoshiJsonParser;
-
 import java.util.Map;
 
-public class Pay2GoResponse {
+public abstract class Pay2GoResponse<T> {
 
-    private String reponseBody;
+    public static final String SUCCESS_STATUS = "SUCCESS";
 
-    private MoshiJsonParser jsonParser;
+    ResponseBody responseBody;
 
-    public Pay2GoResponse(String reponseBody, MoshiJsonParser jsonParser) {
-        this.reponseBody = reponseBody;
-        this.jsonParser = jsonParser;
+    public Pay2GoResponse(ResponseBody responseBody) {
+        this.responseBody = responseBody;
     }
 
-    public String string() {
-        return reponseBody;
+    public String getStatus() {
+        return responseBody.Status;
     }
 
-    public Map<String, Object> map() {
-        return jsonParser.asMap(reponseBody);
+    public String getMessage() {
+        return responseBody.Message;
     }
 
-    public Map result() {
-        String jsonString = (String) map().get("Result");
-        return jsonParser.asMap(jsonString);
+    /**
+     * 判斷回應是否成功
+     */
+    public boolean isResultSuccess() {
+        return SUCCESS_STATUS.equals(responseBody.Status);
     }
 
-    public <T> T result(Class<T> clazz) {
-        String jsonString = (String) map().get("Result");
-        return jsonParser.stringTo(clazz, jsonString);
+    /**
+     * 回應查詢結果
+     */
+    public String getResultString() {
+        return isResultSuccess() ? (String) responseBody.Result : null;
+    }
+
+    /**
+     * 將 JSON 回應內容解析成 Map
+     */
+    abstract public Map getResultMap();
+
+    /**
+     * 將 JSON 回應內容解析成特定的模型
+     */
+    abstract public T getResult();
+
+    /**
+     * 智付寶 API 回應主體
+     */
+    static class ResponseBody {
+
+        /**
+         * 回應狀態
+         */
+        String Status;
+
+        /**
+         * 回應訊息
+         */
+        String Message;
+
+        /**
+         * 回應結果
+         * PS: 該死的 Pay2Go 回應結果型態會依據回應狀態而有不同，成功時是字串，失敗時是個完全沒用的空陣列
+         */
+        Object Result;
+
     }
 
 }
