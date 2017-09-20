@@ -1,7 +1,9 @@
 package com.eHanlin.api.invoice.pay2go;
 
+import com.eHanlin.api.invoice.pay2go.api.InvoiceIssue;
 import com.eHanlin.api.invoice.pay2go.api.InvoiceSearch;
 import com.eHanlin.api.invoice.pay2go.api.Pay2GoAPI;
+import com.eHanlin.api.invoice.pay2go.model.InvoiceIssueResult;
 import com.eHanlin.api.invoice.pay2go.model.InvoiceSearchResult;
 import com.eHanlin.api.invoice.util.CryptoUtil;
 import com.eHanlin.api.invoice.util.HttpInvoker;
@@ -36,22 +38,29 @@ public class Pay2GoInvoice {
     /**
      * 使用發票號碼以及發票隨機碼查詢發票
      */
-    public Pay2GoResponse search(String invoiceNumber, String randomNum) {
-        String responseBody = call(new InvoiceSearch()
-            .setSearchType("0")
-            .setInvoiceNumber(invoiceNumber)
-            .setRandomNum(randomNum)
-            .setTimeStamp((System.currentTimeMillis() / 1000) + "")
-        );
+    public Pay2GoResponse<InvoiceSearchResult> search(String invoiceNumber, String randomNum) {
+        Pay2GoAPI api = new InvoiceSearch()
+                        .setSearchType("0")
+                        .setInvoiceNumber(invoiceNumber)
+                        .setRandomNum(randomNum)
+                        .setTimeStamp((System.currentTimeMillis() / 1000) + "");
 
-        return buildPay2GoResponse(InvoiceSearchResult.class, responseBody);
+        return call(api, InvoiceSearchResult.class);
     }
 
-    private String call(Pay2GoAPI api) {
+    /**
+     * 開立發票
+     */
+    public Pay2GoResponse<InvoiceIssueResult> issue(InvoiceIssue api) {
+        return call(api, InvoiceIssueResult.class);
+    }
+
+    private <T> Pay2GoResponse<T> call(Pay2GoAPI api, Class<T> clazz) {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("MerchantID_", merchantId);
         requestBody.put("PostData_", cryptoUtil.encrypt(api.param()));
-        return http.post(endpoint + api.name(), requestBody);
+        String responseBody = http.post(endpoint + api.name(), requestBody);
+        return buildPay2GoResponse(clazz, responseBody);
     }
 
     private <T> Pay2GoResponse<T> buildPay2GoResponse(Class<T> clazz, String result) {

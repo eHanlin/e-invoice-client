@@ -11,18 +11,8 @@ public class InvoiceSearch extends Pay2GoAPI<InvoiceSearch> {
         return API_NAME;
     }
 
-    public InvoiceSearch setTimeStamp(String timeStamp) {
-        params.put("TimeStamp", timeStamp);
-        return this;
-    }
-
     public InvoiceSearch setSearchType(String searchType) {
         params.put("SearchType", searchType);
-        return this;
-    }
-
-    public InvoiceSearch setMerchantOrderNo(String merchantOrderNo) {
-        params.put("MerchantOrderNo", merchantOrderNo);
         return this;
     }
 

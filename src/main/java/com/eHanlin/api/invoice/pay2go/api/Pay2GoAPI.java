@@ -21,20 +21,37 @@ public abstract class Pay2GoAPI<T> {
 
     @SuppressWarnings("unchecked")
     public T setRespondType(String respondType) {
-        params.put("RespondType", respondType);
-        return (T) this;
+        return setParam("RespondType", respondType);
     }
 
     @SuppressWarnings("unchecked")
     public T setVersion(String version) {
-        params.put("Version", version);
-        return (T) this;
+        return setParam("Version", version);
+    }
+
+    /**
+     * 商店自訂編號
+     * @param merchantOrderNo
+     */
+    @SuppressWarnings("unchecked")
+    public T setMerchantOrderNo(String merchantOrderNo) {
+        return setParam("MerchantOrderNo", merchantOrderNo);
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setTimeStamp(String timeStamp) {
+        return setParam("TimeStamp", timeStamp);
     }
 
     /**
      * 取得 API 名稱
      */
     public abstract String name();
+
+    public T setParam(String name, String value) {
+        params.put(name, value);
+        return (T) this;
+    }
 
     /**
      * 請求參數
