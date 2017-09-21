@@ -3,32 +3,12 @@ package com.eHanlin.api.invoice.pay2go.model;
 /**
  * 查詢發票系統回應訊息
  */
-public class InvoiceSearchResult {
-
-    /**
-     * 商店代號
-     */
-    private String MerchantID;
-
-    /**
-     * 智付寶開立序號
-     */
-    private String InvoiceTransNo;
-
-    /**
-     * 自訂編號
-     */
-    private String MerchantOrderNo;
+public class InvoiceSearchResult extends Pay2GoResult {
 
     /**
      * 發票號碼
      */
     private String InvoiceNumber;
-
-    /**
-     * 發票防偽隨機碼
-     */
-    private String RandomNum;
 
     /**
      * 買受人名稱
@@ -105,12 +85,6 @@ public class InvoiceSearchResult {
     private String TaxAmt;
 
     /**
-     * 發票金額
-     * 純數字,為發票總金額(含稅)。
-     */
-    private String TotalAmt;
-
-    /**
      * 載具類別
      *  1.該張發票儲存的載具類別。
      *      0=手機條碼載具
@@ -158,29 +132,8 @@ public class InvoiceSearchResult {
      */
     private String UploadStatus;
 
-    /**
-     * 檢查碼
-     */
-    private String CheckCode;
-
-    public String getMerchantID() {
-        return MerchantID;
-    }
-
-    public String getInvoiceTransNo() {
-        return InvoiceTransNo;
-    }
-
-    public String getMerchantOrderNo() {
-        return MerchantOrderNo;
-    }
-
     public String getInvoiceNumber() {
         return InvoiceNumber;
-    }
-
-    public String getRandomNum() {
-        return RandomNum;
     }
 
     public String getBuyerName() {
@@ -239,10 +192,6 @@ public class InvoiceSearchResult {
         return TaxAmt;
     }
 
-    public String getTotalAmt() {
-        return TotalAmt;
-    }
-
     public String getCarrierType() {
         return CarrierType;
     }
@@ -273,10 +222,6 @@ public class InvoiceSearchResult {
 
     public String getUploadStatus() {
         return UploadStatus;
-    }
-
-    public String getCheckCode() {
-        return CheckCode;
     }
 
 }

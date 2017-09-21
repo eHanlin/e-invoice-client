@@ -45,6 +45,11 @@ public abstract class Pay2GoResponse<T> {
     abstract public T getResult();
 
     /**
+     * 確認回傳資料是否可信
+     */
+    abstract public boolean check();
+
+    /**
      * 智付寶 API 回應主體
      */
     static class ResponseBody {
