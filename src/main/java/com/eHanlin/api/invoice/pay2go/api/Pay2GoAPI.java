@@ -1,5 +1,6 @@
 package com.eHanlin.api.invoice.pay2go.api;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ public abstract class Pay2GoAPI<T> {
         params = new HashMap<>();
         setRespondType(DEFAULT_RESPOND_TYPE);
         setVersion(DEFAULT_VERSION);
+        setTimeStamp(new Date());
     }
 
     @SuppressWarnings("unchecked")
@@ -41,6 +43,10 @@ public abstract class Pay2GoAPI<T> {
     @SuppressWarnings("unchecked")
     public T setTimeStamp(String timeStamp) {
         return setParam("TimeStamp", timeStamp);
+    }
+
+    public T setTimeStamp(Date timeStamp) {
+        return setTimeStamp((timeStamp.getTime() / 1000) + "");
     }
 
     /**
