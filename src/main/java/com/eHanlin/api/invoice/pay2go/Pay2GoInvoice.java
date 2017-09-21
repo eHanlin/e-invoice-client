@@ -2,9 +2,11 @@ package com.eHanlin.api.invoice.pay2go;
 
 import com.eHanlin.api.invoice.pay2go.api.InvoiceIssue;
 import com.eHanlin.api.invoice.pay2go.api.InvoiceSearch;
+import com.eHanlin.api.invoice.pay2go.api.InvoiceTouchIssue;
 import com.eHanlin.api.invoice.pay2go.api.Pay2GoAPI;
 import com.eHanlin.api.invoice.pay2go.model.InvoiceIssueResult;
 import com.eHanlin.api.invoice.pay2go.model.InvoiceSearchResult;
+import com.eHanlin.api.invoice.pay2go.model.InvoiceTouchIssueResult;
 import com.eHanlin.api.invoice.pay2go.model.Pay2GoResult;
 import com.eHanlin.api.invoice.util.CryptoUtil;
 import com.eHanlin.api.invoice.util.HttpInvoker;
@@ -16,6 +18,7 @@ import java.util.Map;
 /**
  * 智付寶電子發票API
  */
+@SuppressWarnings("unused")
 public class Pay2GoInvoice {
 
     private final String endpoint;
@@ -60,6 +63,20 @@ public class Pay2GoInvoice {
      */
     public Pay2GoResponse<InvoiceIssueResult> issue(InvoiceIssue api) {
         return call(api, InvoiceIssueResult.class);
+    }
+
+    /**
+     * 觸發開立發票
+     */
+    public Pay2GoResponse<InvoiceTouchIssueResult> touchIssue(String merchantOrderNo, String invoiceTransNum, int totalAmt) {
+        return touchIssue(new InvoiceTouchIssue(merchantOrderNo, invoiceTransNum, totalAmt));
+    }
+
+    /**
+     * 觸發開立發票
+     */
+    public Pay2GoResponse<InvoiceTouchIssueResult> touchIssue(InvoiceTouchIssue api) {
+        return call(api, InvoiceTouchIssueResult.class);
     }
 
     private <T extends Pay2GoResult> Pay2GoResponse<T> call(Pay2GoAPI api, Class<T> clazz) {
