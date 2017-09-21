@@ -45,19 +45,14 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
      *  2.列印紙本發票
      */
     public InvoiceIssue() {
+        super(API_NAME, VERSION);
         itemList = new ItemList();
-        setVersion(InvoiceIssue.VERSION)
-            .duty()
-            .withPaper();
+        duty().withPaper();
     }
 
     public InvoiceIssue(String merchantOrderNo) {
         this();
         setMerchantOrderNo(merchantOrderNo);
-    }
-
-    public String name() {
-        return API_NAME;
     }
 
     /**

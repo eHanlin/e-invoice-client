@@ -10,14 +10,15 @@ public abstract class Pay2GoAPI<T> {
 
     private static final String DEFAULT_RESPOND_TYPE = "JSON";
 
-    private static final String DEFAULT_VERSION = "1.1";
+    private String name;
 
     Map<String, String> params;
 
-    Pay2GoAPI() {
+    Pay2GoAPI(String name, String version) {
+        this.name = name;
         params = new HashMap<>();
+        setVersion(version);
         setRespondType(DEFAULT_RESPOND_TYPE);
-        setVersion(DEFAULT_VERSION);
         setTimeStamp(new Date());
     }
 
@@ -52,7 +53,9 @@ public abstract class Pay2GoAPI<T> {
     /**
      * 取得 API 名稱
      */
-    public abstract String name();
+    public String name() {
+        return name;
+    }
 
     public T setParam(String name, String value) {
         params.put(name, value);
