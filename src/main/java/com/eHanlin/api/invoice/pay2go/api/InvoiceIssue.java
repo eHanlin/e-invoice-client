@@ -1,11 +1,15 @@
 package com.eHanlin.api.invoice.pay2go.api;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static com.eHanlin.api.invoice.pay2go.api.InvoiceIssue.Category.*;
 import static com.eHanlin.api.invoice.pay2go.api.InvoiceIssue.PrintFlag.*;
 import static com.eHanlin.api.invoice.pay2go.api.InvoiceIssue.TaxType.*;
+import static com.eHanlin.api.invoice.pay2go.api.InvoiceIssue.Status.*;
 
 /**
- * 智付寶發票查詢
+ * 智付寶發票開立
  */
 @SuppressWarnings("unused")
 public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
@@ -24,6 +28,11 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
      * 一般稅率
      */
     static final int NORMAL_TAX_RATE = 5;
+
+    /**
+     * 預約開立發票，預計開立日期格式
+     */
+    static final String CREATE_STATUS_TIME_FORMAT = "yyyy-MM-dd";
 
     /**
      * 商品明細清單
@@ -483,6 +492,28 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
     }
 
     /**
+     * 語義式建構方法: 等待觸發開立發票
+     */
+    public InvoiceIssue recheck() {
+        return setStatus(RECHECK);
+    }
+
+    /**
+     * 語義式建構方法: 即時開立發票
+     */
+    public InvoiceIssue receipt() {
+        return setStatus(IMMEDIATE);
+    }
+
+    /**
+     * 語義式建構方法: 預約開立發票
+     */
+    public InvoiceIssue receipt(Date createDate) {
+        return setStatus(RESERVE)
+                .setCreateStatusTime(new SimpleDateFormat(CREATE_STATUS_TIME_FORMAT).format(createDate));
+    }
+
+    /**
      * 發票種類
      */
     public enum Category {
@@ -573,7 +604,7 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
         /**
          * 等待觸發開立發票
          */
-        TRIGGER("0"),
+        RECHECK("0"),
 
         /**
          * 即時開立發票
