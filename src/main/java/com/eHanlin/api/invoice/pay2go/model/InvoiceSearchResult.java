@@ -6,11 +6,6 @@ package com.eHanlin.api.invoice.pay2go.model;
 public class InvoiceSearchResult extends Pay2GoResult {
 
     /**
-     * 發票號碼
-     */
-    private String InvoiceNumber;
-
-    /**
      * 買受人名稱
      */
     private String BuyerName;
@@ -112,11 +107,6 @@ public class InvoiceSearchResult extends Pay2GoResult {
     private String PrintFlag;
 
     /**
-     * 開立發票時間
-     */
-    private String CreateTime;
-
-    /**
      * 商品明細
      * 回應是 json string ... fuck u
      */
@@ -131,10 +121,6 @@ public class InvoiceSearchResult extends Pay2GoResult {
      * 發票上傳狀態
      */
     private String UploadStatus;
-
-    public String getInvoiceNumber() {
-        return InvoiceNumber;
-    }
 
     public String getBuyerName() {
         return BuyerName;
@@ -206,10 +192,6 @@ public class InvoiceSearchResult extends Pay2GoResult {
 
     public String getPrintFlag() {
         return PrintFlag;
-    }
-
-    public String getCreateTime() {
-        return CreateTime;
     }
 
     public String getItemDetail() {

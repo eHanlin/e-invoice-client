@@ -16,6 +16,11 @@ public abstract class Pay2GoResult {
     private String InvoiceTransNo;
 
     /**
+     * 發票號碼
+     */
+    private String InvoiceNumber;
+
+    /**
      * 自訂編號
      */
     private String MerchantOrderNo;
@@ -31,33 +36,48 @@ public abstract class Pay2GoResult {
     private String RandomNum;
 
     /**
+     * 開立發票時間
+     *
+     *  例:2014-09-25 12:12:12。
+     */
+    private String CreateTime;
+
+    /**
      * 檢查碼
      *
      *  用來檢查此次資料回傳的合法性,串接時可以比對此參數資料,來檢核是否為智付寶平台所回傳
      */
     private String CheckCode;
 
-    public String getMerchantID() {
+    public final String getMerchantID() {
         return MerchantID;
     }
 
-    public String getInvoiceTransNo() {
+    public final String getInvoiceTransNo() {
         return InvoiceTransNo;
     }
 
-    public String getMerchantOrderNo() {
+    public final String getInvoiceNumber() {
+        return InvoiceNumber;
+    }
+
+    public final String getMerchantOrderNo() {
         return MerchantOrderNo;
     }
 
-    public int getTotalAmt() {
+    public final int getTotalAmt() {
         return TotalAmt;
     }
 
-    public String getRandomNum() {
+    public final String getRandomNum() {
         return RandomNum;
     }
 
-    public String getCheckCode() {
+    public final String getCreateTime() {
+        return CreateTime;
+    }
+
+    public final String getCheckCode() {
         return CheckCode;
     }
 

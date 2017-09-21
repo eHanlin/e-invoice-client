@@ -6,18 +6,6 @@ package com.eHanlin.api.invoice.pay2go.model;
 public class InvoiceIssueResult extends Pay2GoResult {
 
     /**
-     * 發票號碼
-     */
-    private String InvoiceNumber;
-
-    /**
-     * 開立發票時間
-     *
-     *  例:2014-09-25 12:12:12。
-     */
-    private String CreateTime;
-
-    /**
      * 發票條碼
      */
     private String BarCode;
@@ -31,14 +19,6 @@ public class InvoiceIssueResult extends Pay2GoResult {
      * 發票 QRCode (右)
      */
     private String QRcodeR;
-
-    public String getInvoiceNumber() {
-        return InvoiceNumber;
-    }
-
-    public String getCreateTime() {
-        return CreateTime;
-    }
 
     public String getBarCode() {
         return BarCode;
