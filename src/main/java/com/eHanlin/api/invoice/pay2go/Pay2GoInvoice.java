@@ -1,13 +1,7 @@
 package com.eHanlin.api.invoice.pay2go;
 
-import com.eHanlin.api.invoice.pay2go.api.InvoiceIssue;
-import com.eHanlin.api.invoice.pay2go.api.InvoiceSearch;
-import com.eHanlin.api.invoice.pay2go.api.InvoiceTouchIssue;
-import com.eHanlin.api.invoice.pay2go.api.Pay2GoAPI;
-import com.eHanlin.api.invoice.pay2go.model.InvoiceIssueResult;
-import com.eHanlin.api.invoice.pay2go.model.InvoiceSearchResult;
-import com.eHanlin.api.invoice.pay2go.model.InvoiceTouchIssueResult;
-import com.eHanlin.api.invoice.pay2go.model.Pay2GoResult;
+import com.eHanlin.api.invoice.pay2go.api.*;
+import com.eHanlin.api.invoice.pay2go.model.*;
 import com.eHanlin.api.invoice.util.CryptoUtil;
 import com.eHanlin.api.invoice.util.HttpInvoker;
 import com.eHanlin.api.invoice.util.MoshiJsonParser;
@@ -77,6 +71,13 @@ public class Pay2GoInvoice {
      */
     public Pay2GoResponse<InvoiceTouchIssueResult> touchIssue(InvoiceTouchIssue api) {
         return call(api, InvoiceTouchIssueResult.class);
+    }
+
+    /**
+     * 作廢發票
+     */
+    public Pay2GoResponse<InvoiceInvalidResult> invalid(String invoiceNumber, String invalidReason) {
+        return call(new InvoiceInvalid(invoiceNumber, invalidReason), InvoiceInvalidResult.class);
     }
 
     private <T extends Pay2GoResult> Pay2GoResponse<T> call(Pay2GoAPI api, Class<T> clazz) {
