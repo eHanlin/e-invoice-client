@@ -12,7 +12,7 @@ public abstract class Pay2GoAPI<T> {
 
     private String name;
 
-    Map<String, String> params;
+    Map<String, Object> params;
 
     Pay2GoAPI(String name, String version) {
         this.name = name;
@@ -57,8 +57,13 @@ public abstract class Pay2GoAPI<T> {
         return name;
     }
 
-    public T setParam(String name, String value) {
-        params.put(name, value);
+    public T setParam(String name, Object value) {
+        if (value == null) {
+            params.remove(name);
+        } else {
+            params.put(name, value);
+        }
+
         return (T) this;
     }
 
@@ -67,8 +72,8 @@ public abstract class Pay2GoAPI<T> {
      */
     public String param() {
         List<String> args = params.entrySet().stream()
-                .filter(entry -> entry.getValue() != null && entry.getValue().length() > 0)
-                .map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue()))
+                .filter(entry -> entry.getValue() != null)
+                .map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue().toString()))
                 .collect(Collectors.toList());
 
         return String.join("&", args);
