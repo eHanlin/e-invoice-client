@@ -56,7 +56,6 @@ class ItemList {
 
     void setTaxIncluded(boolean taxIncluded) {
         this.taxIncluded = taxIncluded;
-        calculate();
     }
 
     void setTaxRate(int rate) {
@@ -90,11 +89,23 @@ class ItemList {
     }
 
     String getListPriceString() {
-        return join((item) -> "" + item.getPrice());
+        if (taxIncluded) {
+            return join(item -> "" + item.getPrice());
+        } else {
+            return join(item -> ""  + new BigDecimal(item.getPrice())
+                                            .divide(taxRate.add(new BigDecimal(1)), RoundingMode.HALF_UP)
+                                            .intValue());
+        }
     }
 
     String getListAmtString() {
-        return join((item) -> "" + item.getAmt());
+        if (taxIncluded) {
+            return join(item -> "" + item.getAmt());
+        } else {
+            return join(item -> ""  + new BigDecimal(item.getAmt())
+                                            .divide(taxRate.add(new BigDecimal(1)), RoundingMode.HALF_UP)
+                                            .intValue());
+        }
     }
 
     String join(Function<? super Item, ? extends String> mapper) {
@@ -127,28 +138,12 @@ class ItemList {
      * 計算 銷售額、稅額、發票金額
      */
     private void calculate() {
-        if (taxIncluded) {
-            totalAmt = items.stream().mapToInt(Item::getAmt).sum();
-            amt = new BigDecimal(totalAmt)
-                            .divide(taxRate.add(new BigDecimal("1")), RoundingMode.HALF_UP)
-                            .intValue();
+        totalAmt = items.stream().mapToInt(Item::getAmt).sum();
+        amt = new BigDecimal(totalAmt)
+                        .divide(taxRate.add(new BigDecimal("1")), RoundingMode.HALF_UP)
+                        .intValue();
 
-            taxAmt = totalAmt - amt;
-
-        } else {
-            amt = items.stream().mapToInt(Item::getAmt).sum();
-            taxAmt = roundHalfUp(taxRate.multiply(new BigDecimal(amt)));
-            totalAmt = amt + taxAmt;
-        }
-    }
-
-    private int roundHalfUp(BigDecimal number) {
-        return number.setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-    }
-
-    @Override
-    public String toString() {
-        return null;
+        taxAmt = totalAmt - amt;
     }
 
     static class Item {

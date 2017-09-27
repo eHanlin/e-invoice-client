@@ -386,6 +386,7 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
                 .setBuyerUBN(buyerUBN)
                 .setBuyerName(buyerName)
                 .setBuyerAddress(buyerAddress)
+                .taxExcluded()
                 .withPaper();
     }
 
@@ -470,7 +471,8 @@ public class InvoiceIssue extends Pay2GoAPI<InvoiceIssue> {
      */
     public InvoiceIssue taxExcluded() {
         itemList.setTaxIncluded(false);
-        return this;
+        return this.setItemPrice(itemList.getListPriceString())
+                    .setItemAmt(itemList.getListAmtString());
     }
 
     /**
