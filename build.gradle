@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-apply plugin: "java"
+apply plugin: "groovy"
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
 
@@ -16,15 +16,20 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 group = "com.eHanlin.api"
-version = "0.0.2"
+version = "0.0.3"
 
 repositories {
+    maven { url "http://dl.bintray.com/ehanlin/maven" }
     mavenCentral()
 }
 
 dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.squareup.moshi:moshi:1.5.0'
+    compile "com.eHanlin.api:pay2go-crypto:1.0.0"
+    testCompile "org.codehaus.groovy:groovy-all:2.4.10"
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    testCompile 'net.bytebuddy:byte-buddy:1.7.5'
 }
 
 publishing {
@@ -45,7 +50,7 @@ bintray {
         repo = "maven"
         name = "e-invoice-client"
         userOrg = "ehanlin"
-        desc = "eHanlin e-invoice client"
+        desc = "eHanlin pay2go-invoice client"
         vcsUrl = "https://github.com/eHanlin/e-invoice-client"
         licenses = ["Apache-2.0"]
         publicDownloadNumbers = true

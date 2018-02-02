@@ -2,9 +2,9 @@ package com.eHanlin.api.invoice.pay2go;
 
 import com.eHanlin.api.invoice.pay2go.api.*;
 import com.eHanlin.api.invoice.pay2go.model.*;
-import com.eHanlin.api.invoice.util.CryptoUtil;
 import com.eHanlin.api.invoice.util.HttpInvoker;
 import com.eHanlin.api.invoice.util.MoshiJsonParser;
+import com.eHanlin.api.invoice.pay2go.crypto.Pay2GoCrypto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class Pay2GoInvoice {
 
     private final String merchantId;
 
-    private final CryptoUtil cryptoUtil;
+    private final Pay2GoCrypto pay2GoCrypto;
 
     private final HttpInvoker http;
 
@@ -32,7 +32,7 @@ public class Pay2GoInvoice {
     public Pay2GoInvoice(String endpoint, String merchantId, String hashKey, String hashIV) {
         this.endpoint = endpoint;
         this.merchantId = merchantId;
-        this.cryptoUtil = new CryptoUtil(hashKey, hashIV);
+        this.pay2GoCrypto = new Pay2GoCrypto(hashKey, hashIV);
         this.http = new HttpInvoker();
         this.jsonParser = new MoshiJsonParser();
         this.hashKey = hashKey;
@@ -83,9 +83,13 @@ public class Pay2GoInvoice {
     private <T extends Pay2GoResult> Pay2GoResponse<T> call(Pay2GoAPI api, Class<T> clazz) {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("MerchantID_", merchantId);
-        requestBody.put("PostData_", cryptoUtil.encrypt(api.param()));
-        String responseBody = http.post(endpoint + api.name(), requestBody);
-        return buildPay2GoResponse(clazz, responseBody);
+        requestBody.put("PostData_", pay2GoCrypto.encrypt(api.param()));
+        try {
+            String responseBody = http.post(endpoint + api.name(), requestBody);
+            return buildPay2GoResponse(clazz, responseBody);
+        } catch (Exception e) {
+            return buildPay2GoResponse(e);
+        }
     }
 
     private <T extends Pay2GoResult> Pay2GoResponse<T> buildPay2GoResponse(Class<T> clazz, String result) {
@@ -119,8 +123,35 @@ public class Pay2GoInvoice {
                         + "&TotalAmt=" + result.getTotalAmt()
                         + "&HashKey=" + hashKey;
 
-                String recheckData = cryptoUtil.sha256(s).toUpperCase();
+                String recheckData = pay2GoCrypto.sha256(s).toUpperCase();
                 return recheckData.equals(result.getCheckCode());
+            }
+
+        };
+
+    }
+
+    private Pay2GoResponse buildPay2GoResponse(Exception e) {
+
+        Pay2GoResponse.ResponseError responseError = new Pay2GoResponse.ResponseError();
+        responseError.exception = e.getClass().getName();
+        responseError.message = e.getMessage();
+
+        return new Pay2GoResponse(responseError) {
+
+            @Override
+            public Pay2GoResult getResult() {
+                return null;
+            }
+
+            @Override
+            public Map getResultMap() {
+                return null;
+            }
+
+            @Override
+            public boolean check() {
+                return false;
             }
 
         };

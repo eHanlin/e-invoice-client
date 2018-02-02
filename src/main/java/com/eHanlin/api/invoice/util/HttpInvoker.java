@@ -3,8 +3,6 @@ package com.eHanlin.api.invoice.util;
 import okhttp3.*;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.security.cert.CertificateException;
 import java.util.Map;
 
 public class HttpInvoker {
@@ -15,7 +13,7 @@ public class HttpInvoker {
         client = buildTrustAllOkHttpClient();
     }
 
-    public String post(String url, Map<String, String> body) {
+    public String post(String url, Map<String, String> body) throws Exception {
         FormBody.Builder formBodyBuilder = new FormBody.Builder();
         body.forEach(formBodyBuilder::add);
         return send(new Request.Builder()
@@ -24,16 +22,15 @@ public class HttpInvoker {
                             .build());
     }
 
-    private String send(Request request) {
+    private String send(Request request) throws Exception {
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 return response.body().string();
             } else {
-                return "{\"error\": \"Response fail.\"}";
+                StringBuilder headers = new StringBuilder();
+                response.headers().toMultimap().forEach((name, values) -> headers.append(name).append("=").append(values).append("\n"));
+                throw new RuntimeException(headers.toString());
             }
-
-        } catch (IOException e) {
-            return "{\"error\": \"IO exception.\"}";
         }
     }
 
@@ -41,31 +38,29 @@ public class HttpInvoker {
      * 使 OK HTTP client 忽略 TLS 信任錯誤
      */
     private OkHttpClient buildTrustAllOkHttpClient() {
-        final TrustManager[] trustAllCerts = new TrustManager[] {
-            new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
+        X509TrustManager x509TrustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
 
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
+            @Override
+            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
 
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[0];
             }
         };
 
         SSLContext sslContext;
         try {
             sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, null);
+            sslContext.init(null, new TrustManager[] { x509TrustManager }, null);
         } catch (Exception e) {
             throw new RuntimeException("OKHttp is not OK!");
         }
 
         return new OkHttpClient.Builder()
-            .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+            .sslSocketFactory(sslContext.getSocketFactory(), x509TrustManager)
             .hostnameVerifier((String s, SSLSession sslSession) -> true)
             .build();
     }
