@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class MoshiJsonParser {
 
-    private Moshi moshi;
+    private final Moshi moshi;
 
     public MoshiJsonParser() {
         moshi = new Moshi.Builder().build();

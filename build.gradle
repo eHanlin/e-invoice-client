@@ -1,59 +1,43 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6"
-    }
-}
-
 apply plugin: "groovy"
 apply plugin: "maven-publish"
-apply plugin: "com.jfrog.bintray"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 group = "com.eHanlin.api"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
-    maven { url "http://dl.bintray.com/ehanlin/maven" }
+    maven { url "gcs://ehanlin-java-repo/maven2" }
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.squareup.moshi:moshi:1.5.0'
-    compile "com.eHanlin.api:pay2go-crypto:1.0.0"
-    testCompile "org.codehaus.groovy:groovy-all:2.4.10"
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
-    testCompile 'net.bytebuddy:byte-buddy:1.7.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.moshi:moshi:1.12.0'
+    implementation "com.eHanlin.api:pay2go-crypto:1.0.0"
+    testImplementation "org.codehaus.groovy:groovy-all:3.0.8"
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
+    testImplementation 'net.bytebuddy:byte-buddy:1.11.2'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
+            artifactId "e-invoice-client"
+            groupId 'com.eHanlin.api'
             from components.java
+            version "$version"
+        }
+    }
+
+    repositories {
+        maven {
+            url "gcs://ehanlin-java-repo/maven2"
         }
     }
 }
-
-bintray {
-    user = bintray_user
-    key = bintray_api_key
-
-    publications = ["mavenJava"]
-    publish = true
-    pkg {
-        repo = "maven"
-        name = "e-invoice-client"
-        userOrg = "ehanlin"
-        desc = "eHanlin pay2go-invoice client"
-        vcsUrl = "https://github.com/eHanlin/e-invoice-client"
-        licenses = ["Apache-2.0"]
-        publicDownloadNumbers = true
-    }
-}
-

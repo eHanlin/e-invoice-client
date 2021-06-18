@@ -9,11 +9,11 @@ class HttpInvokerSpec extends Specification {
         def invoker = new HttpInvoker()
 
         when:
-        def responseBody = invoker.post("https://cinv.pay2go.com/API/x", [:])
+        def responseBody = invoker.post("https://cinv.ezpay.com.tw/Api/invoice_issue", [:])
 
         then:
         responseBody instanceof String
-        responseBody == "result"
+        responseBody == "{\"Status\":\"KEY10010\",\"Message\":\"\\u5546\\u5e97\\u4ee3\\u865f\\u7a7a\\u767d\",\"Result\":[]}"
     }
 
 }

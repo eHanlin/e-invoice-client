@@ -7,7 +7,7 @@ import com.eHanlin.api.invoice.pay2go.model.InvoiceIssueResult
 class Pay2GoInvoiceSpec extends Specification {
 
     @Shared pay2GoInvoice = new Pay2GoInvoice(
-            "https://cinv.pay2go.com/API/",
+            "https://cinv.ezpay.com.tw/Api/",
             "3673959",
             "LjScrq160VKUN4ZVSeaNtKSgBPRnV3YJ",
             "fuk7A4D3JMXDeIHm"
@@ -51,7 +51,7 @@ class Pay2GoInvoiceSpec extends Specification {
         "Category"        || "資料不齊全Category"
         "TaxType"         || "資料不齊全TaxType"
         "TaxRate"         || "資料不齊全TaxRate"
-        "TaxAmt"          || "請確認發票金額是否正確 (銷售金額的總合 + 稅金 = 發票金額)"
+        "TaxAmt"          || "欄位資料空白-TaxAmt"
         "Amt"             || "欄位資料空白-Amt"
         "TotalAmt"        || "資料不齊全TotalAmt"
         "PrintFlag"       || "資料不齊全PrintFlag"
@@ -66,7 +66,7 @@ class Pay2GoInvoiceSpec extends Specification {
 
     def "開立發票"() {
         given:
-        def merchantOrderNo = "_pay2go_invoice_issue_0_"
+        def merchantOrderNo = "ezpay_invoice_issue2"
         def api = new InvoiceIssue(merchantOrderNo)
                 .b2c("魯小", "rodick@ehanlin.com.tw")
                 .addItem(1, "個", "含稅e名師", 10000)

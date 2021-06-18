@@ -13,7 +13,7 @@ public class InvoiceSearch extends Pay2GoAPI<InvoiceSearch> {
     /**
      * API 版本
      */
-    public static final String VERSION = "1.1";
+    public static final String VERSION = "1.3";
 
     public InvoiceSearch() {
         super(API_NAME, VERSION);

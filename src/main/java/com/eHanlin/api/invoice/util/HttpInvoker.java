@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class HttpInvoker {
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
 
     public HttpInvoker() {
         client = buildTrustAllOkHttpClient();
